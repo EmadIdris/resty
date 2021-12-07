@@ -1,16 +1,12 @@
 'use strict'
 import React, { useState } from 'react';
 import './form.scss';
+
 function Form(props) {
-  //-----------------------------------------
   let [showPostTextArea, setShowPostTextArea] = useState(false);
-  //-----------------------------------------
   let [method, setmethod] = useState('get');
-  //-----------------------------------------
   let [url, seturl] = useState("https://pokeapi.co/api/v2/pokemon");
-  //-----------------------------------------
   let [requestBody, setrequestBody] = useState("");
-  //-----------------------------------------
   function handleSubmit(e) {
     e.preventDefault();
     const formData = {
@@ -19,30 +15,26 @@ function Form(props) {
     };
     props.handleApiCall(formData, requestBody);
   }
-  //-----------------------------------------
   function handlePostTextArea(e) {
     setShowPostTextArea(!showPostTextArea);
     setmethod(e.target.id);
   }
-  //-----------------------------------------
   function setMethod(e) {
     setmethod(e.target.id);
   }
-  //-----------------------------------------
   function handleUrl(e) {
     seturl(e.target.value);
   }
-  //-----------------------------------------
+
   function handleRequestBody(e) {
     setrequestBody(e.target.value);
   }
-  //-----------------------------------------
   return (
     <>
       <form onSubmit={handleSubmit}>
         <label >
           <span>URL: </span>
-          <input name='url' type='text' onChange={handleUrl}/>
+          <input required name='url' type='text' onChange={handleUrl}/>
           <button type="submit" data-testid="submit">GO!</button>
         </label>
         <label className="methods">
