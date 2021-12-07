@@ -18,17 +18,19 @@ function App(props){
    setHistory([...history,requestParams.url,requestParams.method])
    try
    { 
+     console.log(111111111,requestParams.url);
     const dataurl = await axios.get(requestParams.url);
+    console.log(2222222222222,dataurl);
     const data = {
       headers: [dataurl.headers],
-      results: [dataurl.data.results],
+      results: [dataurl.data],
     };
     setState({data}); 
   }
   catch(e){
     console.log('error');
   }
-  }
+  } 
 //---------------------------------------------------------
 useEffect(()=> {
     console.log("%c I RUN ON EVERY RE-RENDER", 'background:#ccc; color:red');
@@ -51,8 +53,6 @@ useEffect(()=> {
       <Header />
          <History history={history}/>  
       <Form handleApiCall={callApi} />
-      {/* { <div>Request Method: {state.requestParams.method}</div> }
-      {<div>URL: {state.requestParams.url}</div>} */}
       <Results data={state.data} />
 
       <Footer />

@@ -23,7 +23,6 @@ function Form(props) {
     setmethod(e.target.id);
   }
   function handleUrl(e) {
-   
     seturl(e.target.value);
   }
 
