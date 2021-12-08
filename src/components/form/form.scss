@@ -3,10 +3,8 @@ $radius: 40%;
 
 form {
   display: inline-block;
-  margin: auto;
-  width: 300px;
-  background-color: rgb(15, 112, 112);
-  border: 1px solid black;
+  // margin: auto;
+  width: 200px;
 
   label {
     display: flex;
@@ -15,14 +13,52 @@ form {
     &.methods {
       span {
         cursor: pointer;
-        margin-right: 1rem;
-        padding: .25rem .5rem;
+        margin-top: 50px;
+        margin-left: 90px;
+        margin-bottom: 60px;
+        padding: 0px 10px 0px 10px ;
         background: #ccc;
+        font-size: 25px;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 
         &:hover, &.active {
-          background: #fff;
+          background: #173e5c;
+          color: white;
         }
       }
     }
   }
+}
+.sreach{
+  top: 150px;
+  left: 90px;
+  position: absolute;
+  width: 75%;
+  height: 20px;
+  background-color: lightcyan;
+}
+.url{
+  top: 145px;
+  left: 20px;
+  position: absolute;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 25px;
+}
+.button{
+  top: 150px;
+  left: 1600px;
+  position: absolute;
+  width: 70px;
+  height: 25px;
+  background-color: lightcyan;
+}
+.textArea{
+  top: 185px;
+  left: 700px;
+  position: absolute;
+  width: 405px;
+  height: 100px;
+  background-color: #ccc;
+  border: 1px solid gray;
+  text-align: center;
 }
