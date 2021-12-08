@@ -1,13 +1,16 @@
-import React from 'react';
+import './results.scss';
 import JSONPretty from 'react-json-pretty';
-import Loading from '../loading';
-//---------------------------------------------------------
-function Results(props){
-  return (
-    <section>
-     { props.data ?<JSONPretty data-testid="renderedData" data={props.data}></JSONPretty>  : <Loading/>}
-    </section>
-  );
+import 'react-json-pretty/themes/monikai.css';
+import Loading from '../loading/index';
+//----------------------------------------
+function Results (props){
+  return(
+    <>
+     <section>
+      {props.data ? <JSONPretty data-testid='result' data={props.data}></JSONPretty> : <Loading/>}
+      </section>
+    </>
+  )
 }
-//---------------------------------------------------------
+//----------------------------------------
 export default Results;

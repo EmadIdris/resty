@@ -1,51 +1,59 @@
-'use strict'
-import React, { useState } from 'react';
+import React,{ useState } from 'react';
 import './form.scss';
-
-function Form(props) {
-  let [showPostTextArea, setShowPostTextArea] = useState(false);
-  let [method, setmethod] = useState('get');
-  let [url, seturl] = useState("https://pokeapi.co/api/v2/pokemon");
-  let [requestBody, setrequestBody] = useState("");
-  function handleSubmit(e) {
+//----------------------------------------
+function Form(props){
+//----------------------------------------
+  let [postRequest , setPostRequest] = useState(false);
+  let [request , setRequest] = useState('GET');
+  let [api , setApi]= useState('');
+  let [textArea , settextArea]= useState('');
+//----------------------------------------
+  function handleSubmit (e){
     e.preventDefault();
+    e.target.reset();
     const formData = {
-      method: method,
-      url: url
+      method: request,
+      url: api,
     };
-    props.handleApiCall(formData, requestBody);
+    props.handleApiCall(formData,textArea);
   }
-  function handlePostTextArea(e) {
-    setShowPostTextArea(!showPostTextArea);
-    setmethod(e.target.id);
+//----------------------------------------
+  function handlePost(e){
+    setRequest(e.target.id);
+    setPostRequest(true)
   }
-  function setMethod(e) {
-    setmethod(e.target.id);
+//----------------------------------------
+  function handleRequest(e){
+    setRequest(e.target.id);
+    setPostRequest(false)
   }
-  function handleUrl(e) {
-    seturl(e.target.value);
+//----------------------------------------
+  function handleApi(e){
+    setApi(e.target.value);
   }
-
-  function handleRequestBody(e) {
-    setrequestBody(e.target.value);
+//----------------------------------------
+  function handletextArea(e){
+    settextArea(e.target.value);
   }
-  return (
+//----------------------------------------
+  return(
     <>
-      <form onSubmit={handleSubmit}>
-        <label >
-          <span>URL: </span>
-          <input required name='url' type='text' onChange={handleUrl}/>
-          <button type="submit" data-testid="submit">GO!</button>
-        </label>
-        <label className="methods">
-        <button className='butt' type='button' id="get" onClick={setMethod}>GET</button>
-       <button className='butt' type='button' id="post" onClick={handlePostTextArea}>POST</button>
-       <button className='butt' type='button' id="put" onClick={handlePostTextArea}>PUT</button>
-       <button className='butt' type='button' id="delete" onClick={setMethod}>DELETE</button>
-     </label>
-      </form>
-      {showPostTextArea && <textarea name="postAndPut" rows="10" cols="35" onChange={handleRequestBody}/>}
+    <form onSubmit={handleSubmit}>
+          <label >
+            <span className='url'>URL: </span>
+            <input name='url' type='text' className='sreach' onChange={handleApi}/>
+            <button type="submit" className='button' data-testid='submitButton'>GO!</button>
+          </label>
+          <label className="methods">
+            <span id="get" className='span' onClick={handleRequest}>GET</span>
+            <span id="post" onClick={handlePost}>POST</span>
+            <span id="put" onClick={handlePost}>PUT</span>
+            <span id="delete" onClick={handleRequest}>DELETE</span>
+          </label>
+          {postRequest && <textArea name='body' col='15' rows='20' className='textArea' onChange={handletextArea} />}
+        </form>
     </>
-  );
+  )
 }
+//----------------------------------------
 export default Form;
