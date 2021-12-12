@@ -1,95 +1,96 @@
-import React from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
+import { Center, Grid, GridItem } from '@chakra-ui/react';
 import axios from 'axios';
-import {useState, useEffect, useReducer} from 'react';
-import historyReducer,{addHistory,emptyHistory} from './components/reducer/reducer';
 import './app.scss';
-import Header from './components/header';
-import Footer from './components/footer';
-import Form from './components/form';
-import Results from './components/results';
+import Header from './components/header/index';
+// import Footer from './components/footer/index';
+import Form from './components/form/index';
+import Results from './components/results/index';
 import History from './components/history/index';
-import Loading from './components/loading/index';
-//----------------------------------------
-const initialState = {
-  history : []
+//------------------------------------------------------------------------
+let initialState = {
+  data: {},
+  requestParams: {},
+  history: []
 }
-//----------------------------------------
-function App(props){
-  const [requestParams,setRequestParams]= useState({});
-  const [data,setData]= useState([]);
-  const [loading,setLoading]= useState(false);
-  const [state, dispatch] = useReducer(historyReducer, initialState)
-  const callApi = async(requestParams) => {
-    // mock output
-    let url = requestParams.url;
-    let method = requestParams.method;
-    let body = requestParams.body;
-    let results = requestParams.results
-//---------------------------------------- console.log
-    // console.log('requestParams',requestParams);
-    // console.log('requestParams.url',requestParams.url);
-    // console.log('requestParams.method',requestParams.method);
-    // console.log('requestParams.body',requestParams.body);
-//----------------------------------------
-    if(method == 'get' || method == 'delete'){
-      await axios[method](url).then(result =>{
-        console.log(11111111111,url);
-        setData([...data ,result.data]);
-        console.log(22222222222222222222,data);
-        console.log('data.data',result.data);
-        dispatch(addHistory(requestParams,result.data));
-        setLoading(true);
-      })
-    }else{
-      await axios[method](url,body).then(result =>{
-        setData([...data , result.data]);
-        console.log('data.data',result.data);
-        dispatch(addHistory(requestParams,result.data));
-        setLoading(true);
-      })
-    }
-    console.log('data',data);
-//----------------------------------------
+let reducerFunction = (state, action) => {
+  switch (action.type) {
+    case 'setParamsAction':
+      return { ...state, requestParams: action.payload };
+    case 'setDataAction':
+      return { ...state, data: action.payload };
+    case 'setHistoryAction':
+      return { ...state, history: [action.payload, ...state.history] };
+    default:
+      return state;
   }
-  //  (comDidM)
-  useEffect(()=> {
-      console.log("%c I RUN ON EVERY RE-RENDER", 'background:#ccc; color:red');
-  });
-//----------------------------------------
-  useEffect(()=> {
-    console.log('%c I RUN WHEN SENDING THE REQUEST:' , 'background:#000; color:purple',requestParams.url );
-  }, [requestParams.url]);
-//----------------------------------------
-  useEffect(()=> {
-      console.log('%c I RUN WHEN HAVE THE RESULT:' ,'background:blue; color:white', data );
-  }, [data]);
-//----------------------------------------
-  useEffect(()=> {
-    console.log('%c I RUN WHEN HAVE THE HISTORY:' ,'background:purple; color:white', history );
-  }, [history]);
-//----------------------------------------
-  useEffect(()=> {
-      console.log('%c Initial loading :', 'background:green; color:white',requestParams);
-  }, []);
-//----------------------------------------
-//UNMOUNT
-  useEffect(()=> {
-      return (()=> {
-          console.log("%c Component unmounted !!", "background:yellow; color:black")
+}
+//------------------------------------------------------------------------
+export default function App() {
+  let [goFlag, setGoFlag] = useState(false);
+  let [resultFlag, setResultFlag] = useState(false);
+  let [state, dispatch] = useReducer(reducerFunction, initialState);
+  useEffect(() => {
+    let responseFunction = async () => {
+      setResultFlag(false);
+      setGoFlag(state.requestParams.url);
+      let newResponse = {};
+      let newCount = 0;
+      let config = {
+        method: `${state.requestParams.method}`,
+        baseURL: `${state.requestParams.url}`,
+        body: `${state.requestParams.body}`
+      }
+      await axios(config).then(response => {
+        setGoFlag(false);
+        setResultFlag(true);
+        newResponse = {
+          headers: response.headers,
+          body: response.data
+        };
+        newCount = newResponse.body.length;
       })
-  });
-//----------------------------------------
-//----------------------------------------
+      const data = {
+        count: newCount,
+        results: newResponse,
+      };
+      await dispatch({ type: 'setDataAction', payload: data });
+      let obj = {
+        requestParams: state.requestParams,
+        data: data
+      };
+      dispatch({ type: 'setHistoryAction', payload: obj });
+    }
+    responseFunction();
+  }, [state.requestParams], [state.data]);
+  let callApi = (requestParams) => {
+    dispatch({ type: 'setParamsAction', payload: requestParams });
+  }
+//------------------------------------------------------------------------
+  let handleHistory = (historyData) => {
+    console.log(historyData);
+    dispatch({ type: 'setDataAction', payload: historyData });
+  }
+//------------------------------------------------------------------------
   return (
-    <React.Fragment>
+    <ChakraProvider color='#161616'>
       <Header />
-      <Form handleApiCall={callApi} />
-      <Results data={data}/>
-      {state.history.length ? <History history={state.history}/> : null}
+      <Center style={{'margin-top':'30px'}} color='#161616'><Form handleApiCall={callApi} /></Center>
+      <Center>
+      <Grid templateColumns='repeat(3, 1fr)' gap={4} style={{'margin-top':'50px'}}>
+        <GridItem colSpan={1} h='100%' color='#161616' >
+          {(goFlag || resultFlag) && <div data-testid='method' className='textDev'><strong>Request Method:</strong> {state.requestParams.method}</div>}
+          {(goFlag || resultFlag) && <div className='textDev'><strong>URL:</strong> {state.requestParams.url}</div>}
+          {(goFlag || resultFlag) && <div className='textDev'><strong>Body:</strong> {state.requestParams.body}</div>}
+          {resultFlag && <History history={state.history} handleHistory={handleHistory}/>}
+        </GridItem>
+        <GridItem colSpan={2} h='100%' color='#161616'>
+          <Results data={state.data} resultFlag={resultFlag} goFlag={goFlag} />
+        </GridItem>
+      </Grid>
+      </Center>
       {/* <Footer /> */}
-    </React.Fragment>
+    </ChakraProvider >
   );
 }
-export default App;
-
-
