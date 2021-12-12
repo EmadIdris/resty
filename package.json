@@ -1,7 +1,9 @@
 {
-  "name": "resty",
-  "version": "0.1.0",
-  "private": true,
+  "name": "class-31-solution-todo",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "main": "src/index.js",
   "dependencies": {
     "@chakra-ui/react": "^1.7.2",
     "@emotion/react": "^11.7.0",
@@ -22,14 +24,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
   },
   "browserslist": {
     "production": [
