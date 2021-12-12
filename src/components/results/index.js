@@ -1,16 +1,15 @@
+import React from 'react';
 import './results.scss';
 import JSONPretty from 'react-json-pretty';
-import 'react-json-pretty/themes/monikai.css';
-import Loading from '../loading/index';
-//----------------------------------------
-function Results (props){
+let JSONPrettyMon = require('react-json-pretty/dist/acai');
+//------------------------------------------------------------------------
+export default function Results(props){
+  let {data, goFlag, resultFlag} = props;
   return(
-    <>
-     <section>
-      {props.data ? <JSONPretty data-testid='result' data={props.data}></JSONPretty> : <Loading/>}
-      </section>
-    </>
-  )
+    <section data-testid='result' id="results" >
+      {goFlag && <div class="dots-4"></div>}
+      {resultFlag && <JSONPretty id="json-pretty" data={data} theme={JSONPrettyMon}></JSONPretty>}
+    </section>
+  );
 }
-//----------------------------------------
-export default Results;
+//------------------------------------------------------------------------

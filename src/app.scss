@@ -1,19 +1,40 @@
-$backgroundColor: gold;
+$backgroundColor: #555b3a;
+$headerColor: #634343;
+$darkPink: #7a4949;
+$blue: #395e64;
+$white: #fff;
 
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background: #173e5c !important;
 }
 
 body {
   background: $backgroundColor;
   height: 100%;
-
+  font-family: 'Source Sans Pro', sans-serif;
+  
+  
   #root {
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow-x: hidden;
+  }
+  
+  .textDev{
+    font-size: 15px;
+    font-size: 16px;
+    color: $white;
   }
 
+  // footer {
+  //   ...
+  // }
+
+  // header {
+  //   ...
+  // }
 }

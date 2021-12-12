@@ -1,59 +1,46 @@
-import React,{ useState } from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react/cjs/react.development';
 import './form.scss';
-//----------------------------------------
-function Form(props){
-//----------------------------------------
-  let [postRequest , setPostRequest] = useState(false);
-  let [request , setRequest] = useState('GET');
-  let [api , setApi]= useState('');
-  let [textArea , settextArea]= useState('');
-//----------------------------------------
-  function handleSubmit (e){
+import { Button, Box } from '@chakra-ui/react';
+//------------------------------------------------------------------------
+export default function Form(props) {
+  let { handleApiCall } = props;
+  let [method, setMethod] = useState('GET');
+  let handleSubmit = (e) => {
     e.preventDefault();
-    e.target.reset();
-    const formData = {
-      method: request,
-      url: api,
+    let body = 'no body'
+    if (method === 'POST' || method === 'PUT') {
+      body = e.target.body.value;
+    }
+    let formData = {
+      method: method,
+      url: e.target.url.value,
+      body: body
     };
-    props.handleApiCall(formData,textArea);
+    handleApiCall(formData);
   }
-//----------------------------------------
-  function handlePost(e){
-    setRequest(e.target.id);
-    setPostRequest(true)
+  let handleClick = (e) => {
+    document.getElementById(method).style.background = '#805AD5';
+    e.target.style.background = '#322659';
   }
-//----------------------------------------
-  function handleRequest(e){
-    setRequest(e.target.id);
-    setPostRequest(false)
-  }
-//----------------------------------------
-  function handleApi(e){
-    setApi(e.target.value);
-  }
-//----------------------------------------
-  function handletextArea(e){
-    settextArea(e.target.value);
-  }
-//----------------------------------------
-  return(
+  return (
+//------------------------------------------------------------------------
     <>
-    <form onSubmit={handleSubmit}>
-          <label >
-            <span className='url'>URL: </span>
-            <input name='url' type='text' className='sreach' onChange={handleApi}/>
-            <button type="submit" className='button' data-testid='submitButton'>GO!</button>
-          </label>
-          <label className="methods">
-            <span id="get" className='span' onClick={handleRequest}>GET</span>
-            <span id="post" onClick={handlePost}>POST</span>
-            <span id="put" onClick={handlePost}>PUT</span>
-            <span id="delete" onClick={handleRequest}>DELETE</span>
-          </label>
-          {postRequest && <textArea name='body' col='15' rows='20' className='textArea' onChange={handletextArea} />}
-        </form>
+      <form onSubmit={handleSubmit}>
+        <label className='inputLabel'>
+          <span data-testid='URL'>URL: </span>
+          <input data-testid='URLinput' name='url' type='text' />
+          <Box as='button' borderRadius='md' bg='teal.600' color='white' data-testid='goButton' type='submit'>GO!</Box>
+        </label>
+        <label className='methods'>
+          <Box as='button' borderRadius='md' bg='purple.500' color='white' px={4} h={8} onClick={(e) => { setMethod('GET'); handleClick(e) }} id='GET'>GET</Box>
+          <Box as='button' borderRadius='md' bg='purple.500' color='white' px={4} h={8} onClick={(e) => { setMethod('POST'); handleClick(e) }} id='POST'>POST</Box>
+          <Box as='button' borderRadius='md' bg='purple.500' color='white' px={4} h={8} onClick={(e) => { setMethod('PUT'); handleClick(e) }} id='PUT'>PUT</Box>
+          <Box as='button' borderRadius='md' bg='purple.500' color='white' px={4} h={8} onClick={(e) => { setMethod('DELETE'); handleClick(e) }} id='DELETE'>DELETE</Box>
+        </label>
+        {(method === 'POST' || method === 'PUT') && <textarea name='body' type='text' rows='4' cols='50'>JSON body</textarea>}
+      </form>
     </>
+//------------------------------------------------------------------------
   )
 }
-//----------------------------------------
-export default Form;
